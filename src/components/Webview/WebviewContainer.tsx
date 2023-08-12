@@ -31,7 +31,7 @@ const WebViewContainer = () => {
   return (
     <WebView
       ref={webview}
-      source={{uri: 'https://naver.com'}}
+      source={{uri: 'https://qfeed-client-web.vercel.app'}}
       onMessage={({nativeEvent: state}) => {
         if (state.data === 'navigationStateChange') {
           setIsCanGoBack(state.canGoBack);
