@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {} from 'react-native/Libraries/NewAppScreen';
@@ -6,6 +7,14 @@ import WebViewContainer from './src/components/Webview/WebviewContainer';
 
 function App(): JSX.Element {
   const Stack = createStackNavigator();
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (SplashScreen) {
+        SplashScreen.hide();
+      }
+    }, 1000);
+  }, []);
 
   return (
     <NavigationContainer>
