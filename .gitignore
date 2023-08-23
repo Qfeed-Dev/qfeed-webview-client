@@ -292,3 +292,6 @@ google-services.json
 
 /ios/Pods/
 /vendor/bundle/
+
+
+GoogleService-info.plist
