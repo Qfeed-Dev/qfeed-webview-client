@@ -7,14 +7,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // firebase
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
+  
   self.moduleName = @"Qfeed";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-  
-  if ([FIRApp defaultApp] == nil) { // 추가 (line:35)
-    [FIRApp configure];
-  }
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

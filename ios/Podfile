@@ -23,12 +23,15 @@ linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
   use_frameworks! :linkage => linkage.to_sym
+  # firebase
+  $RNFirebaseAsStaticFramework = true
 end
 
 target 'Qfeed' do
   config = use_native_modules!
-  pod 'GoogleUtilities', :modular_headers => true
-
+  # firebase 오류 해결
+  use_frameworks! :linkage => :static
+  
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -41,10 +44,18 @@ target 'Qfeed' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => flipper_config,
+#     :flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  
+  # firebase
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseAppCheckInterop', :modular_headers => true
+  pod 'FirebaseAuthInterop', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'GTMSessionFetcher', :modular_headers => true
 
   target 'QfeedTests' do
     inherit! :complete
