@@ -31,6 +31,9 @@ const WebViewContent = ({handleClose}: any) => {
     <WebView
       ref={webview}
       source={{uri: 'https://qfeed-client-web.vercel.app'}}
+      style={{
+        backgroundColor: '#131313',
+      }}
       pullToRefreshEnabled={true}
       startInLoadingState={true}
       allowsBackForwardNavigationGestures={true}
