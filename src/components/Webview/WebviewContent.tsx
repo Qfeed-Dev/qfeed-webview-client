@@ -1,0 +1,65 @@
+import React, {useRef, useState, useEffect} from 'react';
+import {BackHandler} from 'react-native';
+import WebView from 'react-native-webview';
+
+const WebViewContent = ({handleClose}: any) => {
+  const webview = useRef<any>();
+  const [isCanGoBack, setIsCanGoBack] = useState(false);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (isCanGoBack) {
+          webview.current.goBack();
+        } else {
+          handleClose();
+        }
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [isCanGoBack, handleClose]);
+
+  useEffect(() => {
+    if (webview && webview.current.clearCache) {
+      webview.current.clearCache();
+    }
+  }, [webview]);
+
+  return (
+    <WebView
+      ref={webview}
+      source={{uri: 'https://qfeed-client-web.vercel.app'}}
+      pullToRefreshEnabled={true}
+      startInLoadingState={true}
+      allowsBackForwardNavigationGestures={true}
+      mixedContentMode={'compatibility'}
+      originWhitelist={['https://*', 'http://*']}
+      overScrollMode={'never'}
+      injectedJavaScript={`
+          (function() {
+              function wrap(fn) {
+              return function wrapper() {
+                  var res = fn.apply(this, arguments);
+                  window.ReactNativeWebView.postMessage(window.location.href);
+                  return res;
+              }
+              }
+              history.pushState = wrap(history.pushState);
+              history.replaceState = wrap(history.replaceState);
+              window.addEventListener('popstate', function() {
+              window.ReactNativeWebView.postMessage(window.location.href);
+              });
+          })();
+          true;
+          `}
+      onMessage={event => {
+        const url = event.nativeEvent.data;
+        setIsCanGoBack(url !== 'https://qfeed-client-web.vercel.app');
+      }}
+    />
+  );
+};
+
+export default WebViewContent;

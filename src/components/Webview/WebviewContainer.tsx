@@ -1,43 +1,16 @@
-import React, {useRef, useState, useEffect, useCallback} from 'react';
+import React from 'react';
 
-import {BackHandler} from 'react-native';
-import WebView from 'react-native-webview';
+import {BackHandler, SafeAreaView, StatusBar} from 'react-native';
+import WebViewContent from './WebviewContent';
 
 const WebViewContainer = () => {
-  const webview = useRef<any>();
-  const [isCanGoBack, setIsCanGoBack] = useState(false);
-  const handlePressHardwareBackButton = useCallback(() => {
-    if (webview.current && isCanGoBack) {
-      webview.current.goBack();
-      return true;
-    } else {
-      return false;
-    }
-  }, [isCanGoBack]);
-
-  useEffect(() => {
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      handlePressHardwareBackButton,
-    );
-    return () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress',
-        handlePressHardwareBackButton,
-      );
-    };
-  }, [isCanGoBack, handlePressHardwareBackButton]);
-
   return (
-    <WebView
-      ref={webview}
-      source={{uri: 'https://qfeed-client-web.vercel.app'}}
-      onMessage={({nativeEvent: state}) => {
-        if (state.data === 'navigationStateChange') {
-          setIsCanGoBack(state.canGoBack);
-        }
-      }}
-    />
+    <>
+      <StatusBar barStyle="light-content" />
+      <SafeAreaView style={{flex: 1, backgroundColor: '#131313'}}>
+        <WebViewContent handleClose={{onPress: () => BackHandler.exitApp()}} />
+      </SafeAreaView>
+    </>
   );
 };
 
